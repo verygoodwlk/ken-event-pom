@@ -14,7 +14,7 @@
     <groupId>io.github.verygoodwlk</groupId>
     <artifactId>ken-event-pom</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <modules>
         <module>ken-event-boot-starter</module>
         <module>ken-event-core-handler</module>
@@ -81,7 +81,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <spring-boot.version>2.3.0.RELEASE</spring-boot.version>
-        <ken-custem.version>1.0-SNAPSHOT</ken-custem.version>
+        <ken-custem.version>1.0</ken-custem.version>
     </properties>
 
     <dependencyManagement>
