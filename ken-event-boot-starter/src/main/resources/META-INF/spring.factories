@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.ken.event.config.KenEventAutoConfiguration,\
+com.ken.event.action.mq.rabbitmq.config.KenRabbitMQConfiguration
