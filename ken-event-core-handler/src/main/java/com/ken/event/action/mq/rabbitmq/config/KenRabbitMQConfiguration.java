@@ -40,7 +40,6 @@ public class KenRabbitMQConfiguration {
 
         /**
          * 创建一个普通的事件交换机
-         * @return
          */
         @Bean
         public DirectExchange getEventExchange(){
@@ -49,7 +48,6 @@ public class KenRabbitMQConfiguration {
 
         /**
          * 生产端 - RabbitMQ的处理实现类
-         * @return
          */
         @Bean
         public RabbitMqProducerHandler getRabbitMqProducerHandler(){
@@ -59,7 +57,7 @@ public class KenRabbitMQConfiguration {
 
     /**
      * 消费者的配置
-     * @ConditionalOnBean(IKenEventHandler.class)
+     *  ConditionalOnBean(IKenEventHandler.class)
      *   - 如果当前IOC容器中 有一个类型的Bean是IKenEventHandler类型的话，当前这个配置类就会被Spring加载
      */
     @Configuration
@@ -84,7 +82,6 @@ public class KenRabbitMQConfiguration {
 
         /**
          * RabbitMQ的默认消费者对象
-         * @return
          */
         @Bean
         public RabbitMqConsumerListener getRabbitMqConsumerListener(){
@@ -93,7 +90,6 @@ public class KenRabbitMQConfiguration {
 
         /**
          * 创建一个消费端的队列
-         * @return
          */
         @Bean
         public Queue getEventQueue(){
@@ -102,7 +98,6 @@ public class KenRabbitMQConfiguration {
 
         /**
          * 将队列和交换机进行绑定
-         * @return
          */
         @Bean
         public Binding getEventBinding(DirectExchange getEventExchange, Queue getEventQueue){

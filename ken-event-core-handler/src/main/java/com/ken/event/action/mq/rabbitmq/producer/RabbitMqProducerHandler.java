@@ -21,7 +21,6 @@ public class RabbitMqProducerHandler implements MqProducerStandard {
 
     /**
      * 发送消息到RabbitMQ服务
-     * @param kenMessage
      */
     @Override
     public void sendMessage2MQ(KenMessage kenMessage) {

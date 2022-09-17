@@ -31,7 +31,6 @@ public class DefaultCoreConsumerHandler implements CoreConsumerStandard {
 
     /**
      * 核心服务层处理消息
-     * @param kenMessage
      */
     @Override
     public void msgHandler(KenMessage kenMessage) {
