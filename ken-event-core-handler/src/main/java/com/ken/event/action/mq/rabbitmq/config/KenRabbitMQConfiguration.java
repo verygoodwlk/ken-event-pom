@@ -7,17 +7,16 @@ import com.ken.event.action.mq.rabbitmq.producer.RabbitMqProducerHandler;
 import com.ken.event.commons.base.Constants;
 import com.ken.event.commons.utils.ApplicationUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 事件总线中 在rabbitmq的配置类
@@ -44,6 +43,16 @@ public class KenRabbitMQConfiguration {
         @Bean
         public DirectExchange getEventExchange(){
             return new DirectExchange(Constants.RABBITMQ_NORMAL_EXCHANGE_NAME, true, false);
+        }
+
+        /**
+         * 创建一个延迟的交换机
+         */
+        @Bean
+        public CustomExchange getDelayExchange(){
+            Map<String, Object> args = new HashMap<>();
+            args.put("x-delayed-type", "topic");
+            return new CustomExchange(Constants.RABBITMQ_DELAY_EXCHANGE_NAME, "x-delayed-message", true, false, args);
         }
 
         /**
@@ -97,7 +106,37 @@ public class KenRabbitMQConfiguration {
         }
 
         /**
-         * 将队列和交换机进行绑定
+         * 将队列和延迟交换机绑定
+         */
+        @Bean
+        public Binding getDelayEventBinding(CustomExchange getDelayExchange, Queue getEventQueue){
+            //循环所有的消费者监听器
+            for(IKenEventHandler eventHandler : eventHandlers){
+                //通过反射获取监听器对象上的注解
+                KenEvent kenEvent = eventHandler.getClass().getAnnotation(KenEvent.class);
+                if (kenEvent == null)
+                    throw new RuntimeException("Bean of type IKenEventHandler, you must add KenEvent annotation!");
+
+                //循环获取所有的消费者关心的事件类型
+                Binding binding = BindingBuilder
+                        .bind(getEventQueue)
+                        .to(getDelayExchange)
+                        .with(kenEvent.value())
+                        .and(new HashMap<>());
+
+                //手动将Bean注册到IOC容器中
+                ApplicationUtils.registerBean(binding.getClass().getName() + binding.hashCode(), binding);
+            }
+
+            return null;
+        }
+
+
+        /**
+         * 将队列和普通交换机进行绑定
+         * @param getEventExchange
+         * @param getEventQueue
+         * @return
          */
         @Bean
         public Binding getEventBinding(DirectExchange getEventExchange, Queue getEventQueue){

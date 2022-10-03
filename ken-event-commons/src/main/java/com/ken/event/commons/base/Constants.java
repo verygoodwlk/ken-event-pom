@@ -12,6 +12,8 @@ public interface Constants {
      */
     String RABBITMQ_NORMAL_EXCHANGE_NAME = "event-exchange";
 
+    String RABBITMQ_DELAY_EXCHANGE_NAME = "delay-exchange";
+
     /**
      * 队列的前缀名称
      */

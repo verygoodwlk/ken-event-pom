@@ -31,6 +31,11 @@ public class RabbitMqProducerHandler implements MqProducerStandard {
         //如果是迅捷消息 消息就不持久化
         //如果是非迅捷消息 消息就持久化
         messageProperties.setDeliveryMode(kenMessage.getMsgType() == 0 ? MessageDeliveryMode.NON_PERSISTENT : MessageDeliveryMode.PERSISTENT);
+        if (kenMessage.getMsgType() == 2) {
+            //延迟消息，设置延迟时间
+            messageProperties.setHeader("x-delay", kenMessage.getDelayTime());
+        }
+
 
         //将发送的内容序列化
         byte[] body = SerializationUtils.serialize(kenMessage);
@@ -39,6 +44,7 @@ public class RabbitMqProducerHandler implements MqProducerStandard {
 
         if (kenMessage.getMsgType() == 2){
             //延迟消息
+            rabbitTemplate.send(Constants.RABBITMQ_DELAY_EXCHANGE_NAME, kenMessage.getEventType(), message);
         } else {
             //发送到指定交换机
             rabbitTemplate.send(Constants.RABBITMQ_NORMAL_EXCHANGE_NAME,
