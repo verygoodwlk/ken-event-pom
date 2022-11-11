@@ -8,9 +8,11 @@ import com.ken.event.commons.base.Constants;
 import com.ken.event.commons.utils.ApplicationUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -25,6 +27,7 @@ import java.util.Map;
  */
 @Configuration
 @Slf4j
+@ConditionalOnClass(RabbitTemplate.class)
 public class KenRabbitMQConfiguration {
 
     /**
