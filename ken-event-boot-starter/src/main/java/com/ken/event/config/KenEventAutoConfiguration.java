@@ -18,7 +18,6 @@ public class KenEventAutoConfiguration {
 
     /**
      * 核心服务层 - 生产者的默认处理器
-     * @return
      */
     @Bean
     public DefaultCoreProducerHandler getDefaultCoreProducerHandler(){
@@ -27,7 +26,6 @@ public class KenEventAutoConfiguration {
 
     /**
      * 核心服务层 - 消费者的默认处理器
-     * @return
      */
     @Bean
     @ConditionalOnBean(IKenEventHandler.class)

@@ -139,7 +139,7 @@ public class KenRabbitMQConfiguration {
          * 将队列和普通交换机进行绑定
          * @param getEventExchange
          * @param getEventQueue
-         * @return
+         * 
          */
         @Bean
         public Binding getEventBinding(DirectExchange getEventExchange, Queue getEventQueue){

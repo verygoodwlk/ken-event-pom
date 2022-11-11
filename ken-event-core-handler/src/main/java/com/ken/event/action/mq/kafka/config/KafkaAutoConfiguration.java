@@ -39,7 +39,7 @@ public class KafkaAutoConfiguration {
 
     /**
      * 注册Kafka的相关工具对象（动态操作主题）
-     * @return
+     * 
      */
     @Bean
     public AdminClient getAdminClient(KafkaProperties kafkaProperties){
@@ -66,7 +66,7 @@ public class KafkaAutoConfiguration {
 
         /**
          * 创建动态topic
-         * @return
+         * 
          */
         @PostConstruct
         public void createTopic(){
@@ -87,7 +87,7 @@ public class KafkaAutoConfiguration {
 
         /**
          * 获取当前消费者订阅的所有事件类型（Topic）
-         * @return
+         * 
          */
         @Bean
         public String[] eventTypes(){
@@ -104,7 +104,7 @@ public class KafkaAutoConfiguration {
 
         /**
          * 消费端的监听器
-         * @return
+         * 
          */
         @Bean
         public KafkaConsumerListener msgListener(){

@@ -28,7 +28,7 @@ public class ApplicationUtils implements BeanDefinitionRegistryPostProcessor, Ap
     /**
      * 通过Bean的类型，从IOC容器中获取Bean对象
      * @param beanClas
-     * @return
+     * 
      * @param <T>
      */
     public static <T> T getBean(Class<T> beanClas) {
