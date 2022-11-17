@@ -8,6 +8,8 @@ import com.ken.event.standard.inter.MqProducerStandard;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.common.serialization.ByteArrayDeserializer;
+import org.apache.kafka.common.serialization.ByteArraySerializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -30,6 +32,17 @@ import java.util.List;
 @ConditionalOnClass(KafkaTemplate.class)
 @Slf4j
 public class KafkaAutoConfiguration {
+
+    @Autowired
+    private KafkaProperties kafkaProperties;
+
+    @PostConstruct
+    public void init(){
+        kafkaProperties.getProducer().setKeySerializer(ByteArraySerializer.class);
+        kafkaProperties.getProducer().setValueSerializer(ByteArraySerializer.class);
+        kafkaProperties.getConsumer().setKeyDeserializer(ByteArrayDeserializer.class);
+        kafkaProperties.getConsumer().setValueDeserializer(ByteArrayDeserializer.class);
+    }
 
     @Bean
     public MqProducerStandard kafkaMqProduceStandard(){
