@@ -17,6 +17,7 @@ public @interface KenEvent {
 
     /**
      * 表示当前需要注册的事件名称
+     * @return 事件类型的名称
      */
     String value();
 }

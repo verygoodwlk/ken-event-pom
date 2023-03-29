@@ -26,6 +26,8 @@ public class EventTemplate {
 
     /**
      * 发送迅捷消息 - 不保证可靠性 性能最高 实时性最好
+     * @param eventType 事件类型
+     * @param data 消息内容
      */
     public static <T> void sendQuickly(String eventType, T data){
         send(eventType, data, 0, null);
@@ -33,6 +35,8 @@ public class EventTemplate {
 
     /**
      * 发送可靠消息 - 保证消息可达 性能和实时性会略差
+     * @param eventType 事件类型
+     * @param data 消息内容
      */
     public static <T> void sendReliable(String eventType, T data){
         send(eventType, data, 1, null);
@@ -40,6 +44,10 @@ public class EventTemplate {
 
     /**
      * 发送延迟消息
+     * @param eventType 事件类型
+     * @param data 消息内容
+     * @param time 延迟事件
+     * @param unit 时间单位
      */
     public static <T> void sendDelay(String eventType, T data, long time, TimeUnit unit){
         send(eventType, data, 2, unit.toMillis(time));

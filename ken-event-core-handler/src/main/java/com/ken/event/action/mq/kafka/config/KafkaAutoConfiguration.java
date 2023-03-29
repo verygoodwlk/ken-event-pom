@@ -91,6 +91,8 @@ public class KafkaAutoConfiguration {
 
     /**
      * 注册Kafka的相关工具对象（动态操作主题）
+     * @param kafkaProperties kafka的基本属性对象
+     * @return kafka客户端对象
      */
     @Bean
     public AdminClient getAdminClient(KafkaProperties kafkaProperties){
@@ -138,7 +140,7 @@ public class KafkaAutoConfiguration {
 
         /**
          * 获取当前消费者订阅的所有事件类型（Topic）
-         * 
+         * @return 消费端关注的事件类型列表
          */
         @Bean
         public String[] eventTypes(){
@@ -155,7 +157,7 @@ public class KafkaAutoConfiguration {
 
         /**
          * 消费端的监听器
-         * 
+         * @return kafka消费者监听器对象
          */
         @Bean
         public KafkaConsumerListener msgListener(){

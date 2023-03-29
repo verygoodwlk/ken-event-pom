@@ -20,6 +20,7 @@ public class RabbitMqConsumerListener {
 
     /**
      * 监听队列的回调方法
+     * @param message 消息对象
      */
     @RabbitListener(queues = Constants.RABBITMQ_QUEUE_PREFIX + "${spring.application.name}")
     public void handler(Message message){

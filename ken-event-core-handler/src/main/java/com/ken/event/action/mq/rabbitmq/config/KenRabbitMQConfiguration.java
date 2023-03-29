@@ -42,6 +42,7 @@ public class KenRabbitMQConfiguration {
 
         /**
          * 创建一个普通的事件交换机
+         * @return 交换机对象
          */
         @Bean
         public DirectExchange getEventExchange(){
@@ -50,6 +51,7 @@ public class KenRabbitMQConfiguration {
 
         /**
          * 创建一个延迟的交换机
+         * @return 自定义交换机对象
          */
         @Bean
         public CustomExchange getDelayExchange(){
@@ -60,6 +62,7 @@ public class KenRabbitMQConfiguration {
 
         /**
          * 生产端 - RabbitMQ的处理实现类
+         * @return rabbitmq的队列生产者处理器对象
          */
         @Bean
         public RabbitMqProducerHandler getRabbitMqProducerHandler(){
@@ -94,6 +97,7 @@ public class KenRabbitMQConfiguration {
 
         /**
          * RabbitMQ的默认消费者对象
+         * @return rabbitmq的消费者监听器对象
          */
         @Bean
         public RabbitMqConsumerListener getRabbitMqConsumerListener(){
@@ -102,6 +106,7 @@ public class KenRabbitMQConfiguration {
 
         /**
          * 创建一个消费端的队列
+         * @return rabbitmq的队列
          */
         @Bean
         public Queue getEventQueue(){
@@ -110,6 +115,9 @@ public class KenRabbitMQConfiguration {
 
         /**
          * 将队列和延迟交换机绑定
+         * @param getEventQueue 队列对象
+         * @param getDelayExchange 交换机对象
+         * @return 交换机队列绑定对象
          */
         @Bean
         public Binding getDelayEventBinding(CustomExchange getDelayExchange, Queue getEventQueue){
@@ -139,7 +147,7 @@ public class KenRabbitMQConfiguration {
          * 将队列和普通交换机进行绑定
          * @param getEventExchange
          * @param getEventQueue
-         * 
+         * @return 交换机队列绑定对象
          */
         @Bean
         public Binding getEventBinding(DirectExchange getEventExchange, Queue getEventQueue){

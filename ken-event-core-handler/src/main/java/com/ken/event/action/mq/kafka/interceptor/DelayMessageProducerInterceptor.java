@@ -17,7 +17,6 @@ import java.util.concurrent.TimeUnit;
 /**
  * 延迟消息的发送端拦截器
  * @author Ken
- * @create_time 2023/3/29
  */
 @Component
 @Slf4j
