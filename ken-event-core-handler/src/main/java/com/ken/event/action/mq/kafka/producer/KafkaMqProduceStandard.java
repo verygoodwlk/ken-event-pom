@@ -7,6 +7,7 @@ import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.ListTopicsResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.stereotype.Component;
 import org.springframework.util.SerializationUtils;
 
 import java.util.Set;
@@ -17,6 +18,7 @@ import java.util.Set;
  * author: Ken
  * 公众号：Java架构栈
  */
+@Component
 @Slf4j
 public class KafkaMqProduceStandard implements MqProducerStandard {
 

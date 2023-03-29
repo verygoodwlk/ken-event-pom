@@ -43,6 +43,11 @@ public class KenMessage<T> implements Serializable {
     //额外的属性
     private Map<String, Object> attr;
 
+    public KenMessage addAttr(String key, Object value) {
+        this.attr.put(key, value);
+        return this;
+    }
+
     /**
      * 创建一个构建器类
      */
@@ -70,6 +75,7 @@ public class KenMessage<T> implements Serializable {
 
         //额外的属性
         private Map<String, Object> attr;
+
 
         /**
          * 构建器设置一个构造方法

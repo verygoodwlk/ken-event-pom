@@ -3,20 +3,25 @@ package com.ken.event.action.mq.kafka.config;
 import com.ken.event.action.apply.consumer.IKenEventHandler;
 import com.ken.event.action.apply.consumer.KenEvent;
 import com.ken.event.action.mq.kafka.consumer.KafkaConsumerListener;
-import com.ken.event.action.mq.kafka.producer.KafkaMqProduceStandard;
-import com.ken.event.standard.inter.MqProducerStandard;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
 import org.apache.kafka.common.serialization.ByteArraySerializer;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.kafka.DefaultKafkaConsumerFactoryCustomizer;
+import org.springframework.boot.autoconfigure.kafka.DefaultKafkaProducerFactoryCustomizer;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.core.*;
+import org.springframework.kafka.support.LoggingProducerListener;
+import org.springframework.kafka.support.ProducerListener;
+import org.springframework.kafka.support.converter.RecordMessageConverter;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -31,6 +36,7 @@ import java.util.List;
 @Configuration
 @ConditionalOnClass(KafkaTemplate.class)
 @Slf4j
+@ComponentScan("com.ken.event.action.mq.kafka")
 public class KafkaAutoConfiguration {
 
     @Autowired
@@ -38,6 +44,7 @@ public class KafkaAutoConfiguration {
 
     @PostConstruct
     public void init(){
+        log.info("[init serializer] 初始化序列化器....");
         kafkaProperties.getProducer().setKeySerializer(ByteArraySerializer.class);
         kafkaProperties.getProducer().setValueSerializer(ByteArraySerializer.class);
         kafkaProperties.getConsumer().setKeyDeserializer(ByteArrayDeserializer.class);
@@ -45,14 +52,45 @@ public class KafkaAutoConfiguration {
     }
 
     @Bean
-    public MqProducerStandard kafkaMqProduceStandard(){
-        log.debug("[Kafka Module Loader] Kafka的生产端的配置加载！");
-        return new KafkaMqProduceStandard();
+    public KafkaTemplate<?, ?> kafkaTemplate(ProducerFactory<Object, Object> kafkaProducerFactory,
+                                             ProducerListener<Object, Object> kafkaProducerListener,
+                                             ObjectProvider<RecordMessageConverter> messageConverter) {
+        KafkaTemplate<Object, Object> kafkaTemplate = new KafkaTemplate<>(kafkaProducerFactory);
+        messageConverter.ifUnique(kafkaTemplate::setMessageConverter);
+        kafkaTemplate.setProducerListener(kafkaProducerListener);
+        kafkaTemplate.setDefaultTopic(this.kafkaProperties.getTemplate().getDefaultTopic());
+        return kafkaTemplate;
+    }
+
+    @Bean
+    public ProducerListener<Object, Object> kafkaProducerListener() {
+        return new LoggingProducerListener<>();
+    }
+
+    @Bean
+    public ConsumerFactory<?, ?> kafkaConsumerFactory(
+            ObjectProvider<DefaultKafkaConsumerFactoryCustomizer> customizers) {
+        DefaultKafkaConsumerFactory<Object, Object> factory = new DefaultKafkaConsumerFactory<>(
+                this.kafkaProperties.buildConsumerProperties());
+        customizers.orderedStream().forEach((customizer) -> customizer.customize(factory));
+        return factory;
+    }
+
+    @Bean
+    public ProducerFactory<?, ?> kafkaProducerFactory(
+            ObjectProvider<DefaultKafkaProducerFactoryCustomizer> customizers) {
+        DefaultKafkaProducerFactory<?, ?> factory = new DefaultKafkaProducerFactory<>(
+                this.kafkaProperties.buildProducerProperties());
+        String transactionIdPrefix = this.kafkaProperties.getProducer().getTransactionIdPrefix();
+        if (transactionIdPrefix != null) {
+            factory.setTransactionIdPrefix(transactionIdPrefix);
+        }
+        customizers.orderedStream().forEach((customizer) -> customizer.customize(factory));
+        return factory;
     }
 
     /**
      * 注册Kafka的相关工具对象（动态操作主题）
-     * 
      */
     @Bean
     public AdminClient getAdminClient(KafkaProperties kafkaProperties){

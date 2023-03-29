@@ -2,9 +2,9 @@ package com.ken.event.action.mq.kafka.consumer;
 
 import com.ken.event.standard.entity.KenMessage;
 import com.ken.event.standard.inter.CoreConsumerStandard;
-import org.springframework.util.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.util.SerializationUtils;
 
 /**
  * description:
